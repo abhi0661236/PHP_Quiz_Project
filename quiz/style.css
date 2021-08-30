@@ -7,6 +7,8 @@
 #parent-container{
     width: 100%;
     height: 100vh;
+    padding: 0;
+
 }
 #parent-container #v-pills-tab{
     width: 25%;

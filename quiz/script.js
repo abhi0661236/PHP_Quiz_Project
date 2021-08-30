@@ -1,9 +1,138 @@
+// This function is for showing data into input fields
+
+
+function editQuestion(itemNo) {
+  // console.log(itemNo);
+  $.ajax({
+    type: 'POST',
+    url: 'show_data.php',
+    data: {},
+    dataType: 'json',
+    encode: true,
+    statusCode: {
+      404: function () {
+        alert("Unable to show data");
+      },
+    },
+    success: function(data){
+      
+      var index = itemNo-2;
+      var ques_data = JSON.parse(data[index]['ques_data']);
+      // console.log(ques_data['choices'][0]);
+      $('#update_qbody').val(ques_data['question']);
+      $('#update-option1').val(ques_data['choices'][0]);
+      $('#update-option2').val(ques_data['choices'][1]);
+      $('#update-option3').val(ques_data['choices'][2]);
+      $('#update-option4').val(ques_data['choices'][3]);
+      var radioButtons = $("#update-form input:radio[name='update_radio']");
+      radioButtons[ques_data['correctAnswer']].checked = true;
+    }
+
+  });
+}
+
+
+
+
+
 
 
 $(document).ready(function () {
+  
+
+  
+
+  $.ajax({
+    type: 'POST',
+    url: 'show_data.php',
+    data: {},
+    dataType: 'json',
+    encode: true,
+    statusCode: {
+      404: function () {
+        alert("Unable to show data");
+      },
+    },
+    success: function(data){
+      // console.log(data);
+      var item_no = 1;
+      data.forEach(element => {
+        var ques_data = JSON.parse(element['ques_data']);
+        var question = ques_data['question'];
+        
+        var tableBody = $('#all-data-table');
+        var template = `<tr>
+        <th scope="row">${item_no++}</th>
+        <td>${question}</td>
+        <td>
+          <button data-bs-target="#modal-for-edit" data-bs-toggle="modal" class="btn btn-primary m-2" onclick="editQuestion(${item_no});">
+            <i class="fas fa-pen"></i> &nbsp;&nbsp;Edit
+          </button>
+          <button class="btn btn-danger m-2">
+            <i class="fas fa-trash-alt"></i> &nbsp;&nbsp;Delete
+          </button>
+        </td>
+      </tr>`;
+      
+
+      tableBody.append(template);
+      });
+
+
+      
+    }
+  });
+
+  // event handler for update button
+
+  $('#update-ques').click(function(){
+
+
+
+    
+    var myformdata = {};
+    var choices = [];
+    var question = $('#update_qbody').val();
+    var correctAnswer = $('input[name=update_radio]:checked').val();
+    choices.push($('#update-option1').val());
+    choices.push($('#update-option2').val());
+    choices.push($('#update-option3').val());
+    choices.push($('#update-option4').val());
+
+    myformdata['choices'] = choices;
+    myformdata['question'] = question;
+    myformdata['correctAnswer'] = correctAnswer;
+    console.log(myformdata);
+
+
+    $.ajax({
+      type: 'POST',
+      url: 'update_data.php',
+      data: myformdata,
+      dataType: 'json',
+      encode: true,
+      statusCode: {
+      404: function () {
+        alert("Unable to show data");
+        },
+      },
+      success: function(data){
+        alert(data);
+      }
+
+
+
+    });
+  });
+
+
+
+
+
+
 
   // code for azax query
-  $("#getdata").click(function () {
+  $("#v-pills-profile-tab").click(function () {
     $.ajax({
       type: "POST",
       url: "getdata.php",
@@ -22,11 +151,16 @@ $(document).ready(function () {
         var result = data["data"];
         var questions = [];
 
-        result.forEach(element => {
-          var ques_data = JSON.parse(element['ques_data']);
-          console.log(ques_data);
-          questions.push(ques_data);
-        });
+        try {
+          result.forEach(element => {
+            var ques_data = JSON.parse(element['ques_data']);
+            console.log(ques_data);
+            questions.push(ques_data);
+          });
+        } catch (error) {
+          alert("Sorry no questions are found !!");
+          location.reload();
+        }
         
         
 
@@ -101,6 +235,7 @@ $(document).ready(function () {
           var radioList = $("<ul>");
           var item;
           var input = "";
+          console.log(questions[0].choices);
           for (var i = 0; i < questions[index].choices.length; i++) {
             item = $("<li>");
             input = '<input type="radio" name="answer" value=' + i + " />";
@@ -170,8 +305,10 @@ $(document).ready(function () {
           }
           questionCounter = 0;
           selections = [];
+          $('#chk-btn').show();
           displayNext();
           $('#start').hide();
+          
         });
 
 
@@ -204,13 +341,20 @@ $(document).ready(function () {
   
   var myformdata = {};
   
+  
   $('#add-ques').click(function(){
-    myformdata['ques'] = $('#qbody').val();
-    myformdata['o1'] = $('#o1').val();
-    myformdata['o2'] = $('#o2').val();
-    myformdata['o3'] = $('#o3').val();
-    myformdata['o4'] = $('#o4').val();
-    myformdata['o5'] = $('#o5').val();
+    var choices = [];
+    var question = $('#qbody').val();
+    var correctAnswer = $('input[name=c_option]:checked').val();
+    choices.push($('#o1').val());
+    choices.push($('#o2').val());
+    choices.push($('#o3').val());
+    choices.push($('#o4').val());
+
+    myformdata['choices'] = choices;
+    myformdata['question'] = question;
+    myformdata['correctAnswer'] = correctAnswer;
+
     
     $("#modal-for-add").modal('hide');
 
@@ -232,6 +376,8 @@ $(document).ready(function () {
     
     
   });
+
+  
   
   
 
