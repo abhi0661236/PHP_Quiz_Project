@@ -9,6 +9,7 @@ try {
     $rndm_no=rand(0,100);
     $id = date('ymdhis').$rndm_no;
     $ques_data = json_encode($_POST);
+    
     $date = date('Y-m-d h:i:s');
     // prepare sql and bind parameters
   $stmt = $con->prepare("INSERT INTO questions (question_u_id, ques_data, added_on)

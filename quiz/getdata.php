@@ -3,7 +3,7 @@
     
     
 
-    $q = "SELECT * FROM questions WHERE id=1";
+    $q = "SELECT * FROM questions";
 
     $data = array();
         $statement1 = $con->prepare($q);

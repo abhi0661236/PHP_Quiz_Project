@@ -17,8 +17,11 @@ function editQuestion(itemNo) {
     success: function(data){
       
       var index = itemNo-2;
+      var uniqueID = data[index]['question_u_id'];
+      // console.log();
       var ques_data = JSON.parse(data[index]['ques_data']);
       // console.log(ques_data['choices'][0]);
+      $('#qID').val(uniqueID);
       $('#update_qbody').val(ques_data['question']);
       $('#update-option1').val(ques_data['choices'][0]);
       $('#update-option2').val(ques_data['choices'][1]);
@@ -31,6 +34,34 @@ function editQuestion(itemNo) {
   });
 }
 
+
+function deleteQuestion(item){
+  
+  var indexObj = {};
+  
+  indexObj['index'] = item;
+  
+
+  $.ajax({
+    type: 'POST',
+    url: 'delete_data.php',
+    data: indexObj,
+    dataType: 'json',
+    encode: true,
+    statusCode: {
+      404: function () {
+        alert("Unable to delete data");
+      },
+    },
+    success: function(data){
+      console.log(data);
+
+    }
+
+  });
+  
+  location.reload();
+}
 
 
 
@@ -56,7 +87,9 @@ $(document).ready(function () {
     success: function(data){
       // console.log(data);
       var item_no = 1;
+      
       data.forEach(element => {
+        var uid = element['question_u_id'];
         var ques_data = JSON.parse(element['ques_data']);
         var question = ques_data['question'];
         
@@ -68,7 +101,7 @@ $(document).ready(function () {
           <button data-bs-target="#modal-for-edit" data-bs-toggle="modal" class="btn btn-primary m-2" onclick="editQuestion(${item_no});">
             <i class="fas fa-pen"></i> &nbsp;&nbsp;Edit
           </button>
-          <button class="btn btn-danger m-2">
+          <button class="btn btn-danger m-2" onclick="deleteQuestion(${uid});">
             <i class="fas fa-trash-alt"></i> &nbsp;&nbsp;Delete
           </button>
         </td>
@@ -89,9 +122,11 @@ $(document).ready(function () {
 
 
 
-    
-    var myformdata = {};
+    var myformdata = {}
+    var ques_data_updated = {};
     var choices = [];
+
+    var u_id_question = $('#qID').val();
     var question = $('#update_qbody').val();
     var correctAnswer = $('input[name=update_radio]:checked').val();
     choices.push($('#update-option1').val());
@@ -99,10 +134,13 @@ $(document).ready(function () {
     choices.push($('#update-option3').val());
     choices.push($('#update-option4').val());
 
-    myformdata['choices'] = choices;
-    myformdata['question'] = question;
-    myformdata['correctAnswer'] = correctAnswer;
-    console.log(myformdata);
+    ques_data_updated['choices'] = choices;
+    ques_data_updated['question'] = question;
+    ques_data_updated['correctAnswer'] = correctAnswer;
+
+    myformdata['u_id_question'] = u_id_question;
+    myformdata['ques_data_updated'] = ques_data_updated;
+    // console.log(myformdata);
 
 
     $.ajax({
@@ -154,7 +192,7 @@ $(document).ready(function () {
         try {
           result.forEach(element => {
             var ques_data = JSON.parse(element['ques_data']);
-            console.log(ques_data);
+            // console.log(ques_data);
             questions.push(ques_data);
           });
         } catch (error) {
@@ -235,7 +273,7 @@ $(document).ready(function () {
           var radioList = $("<ul>");
           var item;
           var input = "";
-          console.log(questions[0].choices);
+          // console.log(questions[0].choices);
           for (var i = 0; i < questions[index].choices.length; i++) {
             item = $("<li>");
             input = '<input type="radio" name="answer" value=' + i + " />";
@@ -314,6 +352,7 @@ $(document).ready(function () {
 
         function displayScore() {
           var score = $("<p>", { id: "question" });
+          // console.log(score);
 
           var numCorrect = 0;
           for (var i = 0; i < selections.length; i++) {
@@ -323,7 +362,7 @@ $(document).ready(function () {
             }
           }
 
-          // console.log(numCorrect);
+          // console.log(numCorrect)
 
           var usrScore = numCorrect * 10;
           var maxScore = questions.length * 10;

@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 
-<body>
+<body style="overflow: hidden;">
   <div class="d-flex container-fluid" id="parent-container">
     <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
       <div class="layer">
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div class="tab-content" id="v-pills-tabContent">
+    <div style="overflow: auto;" class="tab-content" id="v-pills-tabContent">
       <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
         <div style="justify-content: space-between;" class="container d-flex align-items-center mycontainer bg-dark text-white p-4">
           
@@ -129,7 +129,7 @@
                     </div>
 
                     <div class="modal-footer">
-                      <button id="close-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                      <button id="close-btn-add" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Close
                       </button>
                       <button id="add-ques" type="submit" class="btn btn-primary">
@@ -161,6 +161,16 @@
                 </div>
                 <div class="modal-body">
                   <form id="update-form">
+
+
+                    <!-- for developers only -->
+                    <div class="mb-3 hidden_div">
+                      <label for="qID" class="form-label ">Question</label>
+                      <input type="text" class="form-control " id="qID" />
+                    </div>
+
+
+
                     <div class="mb-3">
                       <label for="update_qbody" class="form-label">Question</label>
                       <input type="text" class="form-control" id="update_qbody" />
@@ -193,30 +203,30 @@
                     <div class="row container">
 
                       <div class="form-check col">
-                        <input required class="form-check-input" type="radio" name="update_radio" id="radio-option1"
+                        <input required class="form-check-input" type="radio" name="update_radio" id="update-radio-option1"
                           value="0">
-                        <label class="form-check-label" for="radio-option1">
+                        <label class="form-check-label" for="update-radio-option1">
                           Option 1
                         </label>
                       </div>
                       <div class="form-check col">
-                        <input class="form-check-input" type="radio" name="update_radio" id="radio-option2"
+                        <input class="form-check-input" type="radio" name="update_radio" id="update-radio-option2"
                           value="1">
-                        <label class="form-check-label" for="radio-option2">
+                        <label class="form-check-label" for="update-radio-option2">
                           Option 2
                         </label>
                       </div>
                       <div class="form-check col">
-                        <input class="form-check-input" type="radio" name="update_radio" id="radio-option3"
+                        <input class="form-check-input" type="radio" name="update_radio" id="update-radio-option3"
                           value="2">
-                        <label class="form-check-label" for="radio-option3">
+                        <label class="form-check-label" for="update-radio-option3">
                           Option 3
                         </label>
                       </div>
                       <div class="form-check col">
-                        <input class="form-check-input" type="radio" name="update_radio" id="radio-option4"
+                        <input class="form-check-input" type="radio" name="update_radio" id="update-radio-option4"
                           value="3">
-                        <label class="form-check-label" for="radio-option4">
+                        <label class="form-check-label" for="update-radio-option4">
                           Option 4
                         </label>
                       </div>
@@ -226,10 +236,10 @@
 
 
                     <div class="modal-footer">
-                      <button id="close-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                      <button id="close-btn-update" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Close
                       </button>
-                      <button id="update-ques" type="submit" class="btn btn-primary" onclick="return false;">
+                      <button id="update-ques" type="submit" class="btn btn-primary">
                         Update
                       </button>
                     </div>
